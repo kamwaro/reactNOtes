@@ -292,3 +292,99 @@ const element = <Welcome name="Sara" />;
   element,
   document.getElementById('root')
   );
+
+* Let's recap what happens in the above example:
+
+1. We call ReactDOM.render() with the <Welcome name="Sara" /> element.
+2. React calls the Welcome component with {name: 'Sara'} as the props.
+3. Our Welcome component returns a <h1>Hello, Sara</h1> element as the result.
+4. React DOM efficiently updates the DOM to match <h1>Hello, Sara</h1>.
+
+## NOTE:
+
+- Always start component names with a capital letter.
+- React treats components starting with lower case letters as DOM tags.
+- For example, <div/> represents a HTML div tag, but <Welcome /> represents a component and requires Welcome to be in scope.
+
+### Composing Components
+
+- Components can refer to other components in their output. This lets us use the same component abstraction for any level of detail.
+- A button, a form a dialog, a screen: in React apps, all those are commonly expressed as components.
+
+- For example, we can create an App component that renders Welcome many times;
+
+function Welcome(props) {
+return <h1>Hello, {props.name} </h1>
+}
+
+function App() {
+return (
+<div>
+<Welcome name="Sara">
+<Welcome name="Cahal">
+<Welcome name="Edite">
+</div>
+)
+}
+
+ReactDOM.render(
+<App />,
+document.getElementById('root')
+);
+
+- Typically, new React apps have a single App component at the very top.
+- However, if you integrate React into an existing app, you might start bottom-up with a small component like Button and gradually work your way to the top of the view hierarchy.
+
+### Extracting Components
+
+- You can split components into smaller components.
+
+#### EXample
+
+                        function formatDate(date) {
+                    return date.toLocaleDateString();
+                  }
+
+                  function Comment(props) {
+                    return (
+                      <div className="Comment">
+                        <div className="UserInfo">
+                          <img
+                            className="Avatar"
+                            src={props.author.avatarUrl}
+                            alt={props.author.name}
+                          />
+                          <div className="UserInfo-name">
+                            {props.author.name}
+                          </div>
+                        </div>
+                        <div className="Comment-text">{props.text}</div>
+                        <div className="Comment-date">
+                          {formatDate(props.date)}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  const comment = {
+                    date: new Date(),
+                    text: 'I hope you enjoy learning React!',
+                    author: {
+                      name: 'Hello Kitty',
+                      avatarUrl: 'https://placekitten.com/g/64/64',
+                    },
+                  };
+
+
+                  ReactDOM.render(
+                    <Comment
+                      date={comment.date}
+                      text={comment.text}
+                      author={comment.author}
+                    />,
+                    document.getElementById('root')
+                  );
+
+- It accepts author (an object), text (a string), and date (a date) as props, and describes a comment on a social media website.
+
+- This component can be tricky to change because of all the nesting, and it is also hard to reuse individual parts of it.
