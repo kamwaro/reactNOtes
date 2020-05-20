@@ -19,7 +19,7 @@
 
 ReactDOM.render(
 
-<h1>Hello, world!</h1>
+<h1>Hello, world!</h1>,
 document.getElementById('root')
 );
 
@@ -110,7 +110,7 @@ return <h1>Hello, Stranger.</h1>
 - You may also use curly braces to embed a Javscript expression in an attribute:
   const element = <img src={user.avatarUrl}></img>
 
-- Dont put quotes around curly braces when embedding a Javscript expression in an attribute.
+- Dont put quotes around curly braces when embedding a Javascript expression in an attribute.
 - You should either use quotes (for string values) or curly braces for expressions, but not both in the same attribute.
 
         Warning:
@@ -123,7 +123,7 @@ return <h1>Hello, Stranger.</h1>
   const element = <img src={user.avatarUrl} />;
 
 - JSX tags may contain children:
-  const element = (  
+  const element = (
    <div>
   <h1>Hello!</h1>
   <h2>Good to see you here.</h2>
@@ -176,7 +176,6 @@ React.createElement() performs a few checks to help you write bug-free code but 
 - These objects are called "React elements".
 - -You can think of them as descriptions of what you want to see on the screen.
 - React reads these objects and uses them to construct the DOM and keep it to date.
--
 
 ### 3. Rendering elements
 
@@ -217,6 +216,7 @@ ReactDOM.render(element, document.getElementById('root));
 
 function tick(){
 const element = (
+
 <div>
 <h1>Hello, world!</h1>
 <h2>It is {new Date().toLocaleTimeString()}</h2>
@@ -241,3 +241,54 @@ setInterval(tick, 1000);
 - Thinking about how the UI should look at any given moment, rather than how to change it over time, eliminates a whole class of bugs.
 
 ### Components and Props
+
+- Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.
+
+- Conceptually, components are like Javscript functions. They accept arbitrary inputs called "props" and return React elements describing what should appear on the screen.
+
+### Function and Class Components
+
+- The simplest way to define a component is to write a Javascript function:
+
+function Welcome(props) {
+return <h1>Hello, {props.name}</h1>;
+}
+
+- This function is a valid React component because it accepts a single "props" (which stands for properties) object argument with datat and returns a React element.
+- Such components are called "function components" because they are literally Javacript functions.
+
+- You can also use an ES6 class to define a component:
+
+class Welcome extends React.Component {
+render(){
+return <h1>Hello, {this.props.name}</h1>
+}
+}
+
+- The above two components are equivalent from React's point of view.
+
+- Function and Class components both have some additional features.
+
+### Rendering a Component
+
+- Previously, we only encountered React elements that represent DOM tags:
+
+const element = <div />;
+
+- However, elements can also represent user-defined components:
+
+const element = <Welcome name="Sara" />;
+
+- When React sees an element representing a user-defined component, it passes JSX attributes and children to this component as a single object. We call this object "props".
+
+- For example, this code renders "Hello, Sara"
+
+  function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>
+  }
+
+  const element = <Welcome name="Sara" />;
+  ReactDOM.render(
+  element,
+  document.getElementById('root')
+  );
