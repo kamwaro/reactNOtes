@@ -240,7 +240,7 @@ setInterval(tick, 1000);
 - Even though we create an element describing the whole UI tree on every tick, only the text node whose contents have changed gets updated by ReactDOM
 - Thinking about how the UI should look at any given moment, rather than how to change it over time, eliminates a whole class of bugs.
 
-### Components and Props
+# 4. Components and Props
 
 - Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.
 
@@ -319,6 +319,7 @@ return <h1>Hello, {props.name} </h1>
 
 function App() {
 return (
+
 <div>
 <Welcome name="Sara">
 <Welcome name="Cahal">
@@ -387,4 +388,119 @@ document.getElementById('root')
 
 - It accepts author (an object), text (a string), and date (a date) as props, and describes a comment on a social media website.
 
-- This component can be tricky to change because of all the nesting, and it is also hard to reuse individual parts of it.
+*        function Comment(props) {
+           return (
+            <div className="Comment">
+              <div className="UserInfo">
+               <img className="Avatar"
+              src={props.author.avatarUrl}
+              alt={props.author.name}
+              />
+              <div className="UserInfo-name">
+
+  ==> {props.author.name}
+  </div>
+  </div>
+  <div className="Comment-text">
+  ==> {props.text}
+  </div>
+  <div className="Comment-date">
+  ==> {formatDate(props.date)}
+  </div>
+  </div>
+  );
+  }
+
+* This component can be tricky to change because of all the nesting, and it is also hard to reuse individual parts of it.
+
+* First, we will extract Avatar:
+
+function Avatar(props) {
+return (
+<img className="Avatar"
+      src={props.user.avatarUrl}
+      alt={props.user.name}
+      >
+)
+}
+
+- The Avatar doesn't need to know that it is being rendered inside a Comment. This is why we have given its prop a more generic name: `user` rather than author.
+
+- Its recommended naming props from the component's own point of view rather than the context in which it us being used.
+
+- We can now simplify Comment a tiny bit
+
+                    function Comment(props) {
+                    return (
+                      <div className="Comment">
+                        <div className="UserInfo">
+
+  ====> <Avatar user={props.author} />
+  <div className="UserInfo-name">
+  {props.author.name}
+  </div>
+  </div>
+  <div className="Comment-text">
+  {props.text}
+  </div>
+  <div className="Comment-date">
+  {formatDate(props.date)}
+  </div>
+  </div>
+  );
+  }
+
+* Next, we will extract a UserINfo component that renders an Avatar next to the user's name:
+
+function UserInfo(props) {
+return (
+
+<div className="UserInfo">
+<Avatar user={props.user} />
+<div className="UserInfo-name">
+{props.user.name}
+</div>
+</div>
+);
+}
+
+- This lets us simplify Comment even further:
+
+            function Comment(props){
+              return (
+                <div className="Comment">
+
+  ===> <UserInfo user={props.author} />
+  <div className="Comment-text">
+  {props.text}
+  </div>
+    
+   )
+  }
+
+  - EXtracting components might seem like grunt work at first, but having a pallete of reusable components pays off in larger apps.
+  - A good rule of thumb is that if a part of your UI is used several times (Button, Panel, Avatar), or is complex enough on its own (App, FeedStory, Comment), it is a good candidate to be a reusable component.
+
+### Props are Read-Only
+
+- Whether you declare a component as a function or a class, it must never modify its own props. Consider this sum function:
+
+  function sum(a, b){
+  return a + b;
+  }
+
+- Such functions are called "pure" because they do not attempt to change their inputs, and always return the same result for the same inputs.
+
+- In contrast, the function below is impure because it changes its own input:
+
+function withdraw(account, amount){
+
+      account.total -= amount;
+
+}
+
+- React is pretty flexibble but it has a single strict rule:
+
+- `All React components must act like pure functions with respect to their props.`
+
+- Of course, application UIs are dynamic and change over time. Therefore React introduced a anew concept of "state". State allows React components to change their output over time in response to user actions, network responses, and anything else, without violating this rule.
