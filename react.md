@@ -76,11 +76,11 @@ document.getElementById('root')
           lastName: 'Perez'
       }
 
-      const element = {
+      const element = (
           <h1>
           Hello, {formatName(user)}!
           </h1>
-      }
+      )
 
 ReactDOM.render(
 element,
@@ -115,7 +115,7 @@ return <h1>Hello, Stranger.</h1>
 
         Warning:
             - Since JSX is closer to Javscript than to HTML, ReactDOM uses camelCase property naming convention instead of HTML attribute names.
-            - For example, class becomes className in JSX, and tabIndex becomes tabIndex.
+            - For example, class becomes className in JSX, and tabindex becomes tabIndex.
 
 #### Specifying Children with JSX
 
